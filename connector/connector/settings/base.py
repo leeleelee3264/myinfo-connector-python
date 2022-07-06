@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from .env import (
+    ENV,
+)
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -23,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#t-ytt&b_b*d#syvogkx!t++s#t_its7i5-+172sjivoy2e!kp'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV.bool('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ENV.list('ALLOWED_HOSTS', str, default=['*'])
 
 
 # Application definition
@@ -37,6 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'services.agent.oauth',
+    'services.sign_up',
+    'services.health_check',
 ]
 
 MIDDLEWARE = [

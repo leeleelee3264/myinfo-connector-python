@@ -2,3 +2,6 @@
 ./connector/.idea
 .idea
 .idea/.gitignore
+
+*.pyc 
+__pycache__/
