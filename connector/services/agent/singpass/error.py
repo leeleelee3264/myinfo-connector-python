@@ -1,3 +1,6 @@
+from rest_framework import status
+
+
 class MyinfoError(Exception):
     description = ''
 
@@ -28,3 +31,9 @@ class CredentialNotFoundError(MyinfoError):
 
 class CertificationNotFoundError(MyinfoError):
     description = 'There is no certification key for myinfo.'
+
+
+class SettingNotFound(MyinfoError):
+    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+    code = "MYINFO_SETTING_NOT_FOUND"
+    description = 'Myinfo setting is not defined, please check server setting.'

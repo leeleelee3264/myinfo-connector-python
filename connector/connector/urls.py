@@ -18,4 +18,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', include('services.health_check.urls')),
+    path('', include('services.sign_up.urls')),
 ]
