@@ -17,7 +17,6 @@ class SingpassService:
             )
         except requests.exceptions.RequestException as re:
             logger.error(SINGPASS_SERVICE_LOG_EVENT, data=str(re))
-            api_response.raise_for_status()
 
         return api_response
 
@@ -30,6 +29,5 @@ class SingpassService:
             )
         except requests.exceptions.RequestException as re:
             logger.error(SINGPASS_SERVICE_LOG_EVENT, data=str(re))
-            api_response.raise_for_status()
 
         return api_response

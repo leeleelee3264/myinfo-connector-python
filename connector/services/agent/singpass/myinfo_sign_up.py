@@ -7,6 +7,7 @@ from services.agent.singpass import error
 from services.agent.singpass.mapper.myinfo_mapper import _Mapper
 from services.agent.singpass.mapper.myinfo_request_builder import MyinfoRequestBuilder
 from services.agent.singpass.mapper.myinfo_response_builder import MyinfoResponseBuilder
+from services.agent.singpass.value_object import MyinfoApiKey
 
 logger = structlog.getLogger()
 MYINFO_SERVICE_LOG_EVENT = "myinfo_service"
@@ -40,7 +41,6 @@ class MyinfoSignupService(OauthSignupService):
         self._app_id = self._client_id
         self._client_secret = settings.MYINFO_CLIENT_SECRET
 
-        self._kasa_public_key = settings.KASA_GENERATED_PUBLIC_KEY
         self._kasa_private_key = settings.KASA_GENERATED_PRIVATE_KEY
         self._myinfo_public_key = settings.MYINFO_GENERATED_PUBLIC_KEY
 
@@ -66,8 +66,6 @@ class MyinfoSignupService(OauthSignupService):
 
     def _validate_certification_setting(self) -> None:
         while True:
-            if not self._kasa_public_key:
-                break
             if not self._kasa_private_key:
                 break
             if not self._myinfo_public_key:
@@ -75,3 +73,10 @@ class MyinfoSignupService(OauthSignupService):
             return
 
         raise error.CertificationNotFoundError
+
+    def _get_api_key(self) -> MyinfoApiKey:
+        return MyinfoApiKey(
+            app_id=self._app_id,
+            client_id=self._client_id,
+            client_secret=self._client_secret,
+        )

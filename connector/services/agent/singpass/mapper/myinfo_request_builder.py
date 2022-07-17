@@ -21,7 +21,7 @@ class MyinfoRequestBuilder:
               f'&attributes={attributes}' \
               f'&state={state}' \
               f'&redirect_uri={redirect_uri}' \
-              f'&purpose=Demonstrating MyInfo APIs'
+              f'&purpose=python-myinfo-connector'
 
         return MyinfoAuthoriseRedirectUrl(
             state=state,

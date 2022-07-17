@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'services.agent.oauth',
+    'services.agent.singpass',
     'services.sign_up',
     'services.health_check',
 ]
