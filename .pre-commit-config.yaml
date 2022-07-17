@@ -1,0 +1,23 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: local
+    hooks:
+      - id: flake8
+        name: Style Lint
+#        entry: pipenv run flake8 --append-config=setup.cfg
+        entry: pipenv run flake8 --append-config=setup.cfg
+        language: system
+        types: [file, python]
+
+      - id: pylint
+        name: pylint
+        entry: pipenv run pylint --rcfile=pylintrc
+        language: system
+        types: [file, python]
+
+      - id: pylint
+        name: Type Checker
+        entry: pipenv run mypy
+        language: system
+        types: [file, python]
