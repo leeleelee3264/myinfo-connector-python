@@ -6,9 +6,5 @@ class MyinfoServiceError(Exception):
     message = 'Myinfo Registration is not available. Please use another registration.'
 
 
-class MyinfoServiceErrorImpl(MyinfoServiceError):
-    pass
-
-
 class InvalidMyinfoSignature(MyinfoServiceError):
     pass

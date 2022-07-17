@@ -18,7 +18,5 @@ class MyinfoPerson:
     nationality: str
 
     identification_number: str
+    # TODO 다른 타입으로 바꿔야 한다.
     annual_income: dict
-
-    foreigner: bool
-    signature: str

@@ -5,7 +5,6 @@ repos:
     hooks:
       - id: flake8
         name: Style Lint
-#        entry: pipenv run flake8 --append-config=setup.cfg
         entry: pipenv run flake8 --append-config=setup.cfg
         language: system
         types: [file, python]

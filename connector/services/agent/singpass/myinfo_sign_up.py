@@ -1,29 +1,88 @@
+import json
+
 import structlog
 from django.conf import settings
+from requests.exceptions import HTTPError
 
 from domain import oauth as domain
 from domain.oauth.services.sign_up import OauthSignupService
 from services.agent.singpass import error
 from services.agent.singpass.mapper.myinfo_mapper import _Mapper
 from services.agent.singpass.mapper.myinfo_request_builder import MyinfoRequestBuilder
-from services.agent.singpass.mapper.myinfo_response_builder import MyinfoResponseBuilder
-from services.agent.singpass.value_object import MyinfoApiKey
+from services.agent.singpass.mapper.myinfo_response_parser import MyinfoResponseParser
+from services.agent.singpass.singpass_api_call_mixin import SingpassApiMixIn
+from services.agent.singpass.value_object import (
+    MyinfoAccessToken,
+    MyinfoApiKey,
+)
 
 logger = structlog.getLogger()
 MYINFO_SERVICE_LOG_EVENT = "myinfo_service"
 
 
-class MyinfoSignupService(OauthSignupService):
+class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
 
     def __init__(self):
+        super().__init__()
+
         self.__init__myinfo_setting()
 
         self._mapper = _Mapper()
         self._req_builder = MyinfoRequestBuilder()
-        self._res_builder = MyinfoResponseBuilder()
+        self._res_parser = MyinfoResponseParser(self._requested_attributes)
 
-    def get_data(self, code: domain.AuthCode) -> domain.MyinfoPerson:
-        pass
+    # def get_data(
+    #         self,
+    #         code: domain.AuthCode,
+    # ) -> domain.MyinfoPerson:
+    #
+    #     access_token = self._get_access_token(code)
+    #     person_output = self._get_person_data(access_token)
+    #
+    #     return self._map_data(person_output)
+
+    def _get_access_token(self, code: domain.AuthCode) -> MyinfoAccessToken:
+
+        url = self._endpoint + '/token'
+
+        auth = self._req_builder.build_token_auth_header(
+            endpoint=url,
+            api_key=self._get_api_key(),
+            code=code,
+            redirect_uri=self._redirect_uri,
+            private_key=self._kasa_private_key,
+        )
+
+        body = {
+            'code': code,
+            'client_secret': self._client_secret,
+            'client_id': self._client_id,
+            'redirect_uri': self._redirect_uri,
+            'grant_type': 'authorization_code',
+        }
+
+        try:
+            response = self.post(
+                url=url,
+                body=body,
+                authorization=auth,
+                content_type='application/x-www-form-urlencoded',
+            )
+
+            payload = json.loads(response.content.decode('utf-8'))
+
+            token = self._res_parser.build_token_res(
+                payload=payload,
+                myinfo_public_key=self._myinfo_public_key,
+            )
+
+            return token
+
+        except HTTPError as e:
+            logger.error(MYINFO_SERVICE_LOG_EVENT,
+                         message=f'status: {e.response.status_code}, msg={e.response.content}')
+
+            raise error.AccessTokenBadRequest(e)
 
     def get_authorise_url(self) -> domain.MyinfoAuthoriseRedirectUrl:
 
