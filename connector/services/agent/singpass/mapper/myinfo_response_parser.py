@@ -187,6 +187,9 @@ class MyinfoResponseParser:
         """
         addr = person.get(self._registered_address)
 
+        if not (person, addr):
+            raise error.PersonDataInvalid
+
         while True:
             if person.get(self._birth_country).get('code') == 'UN':
                 break
