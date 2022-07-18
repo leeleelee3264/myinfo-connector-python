@@ -14,6 +14,7 @@ from services.agent.singpass.singpass_api_call_mixin import SingpassApiMixIn
 from services.agent.singpass.value_object import (
     MyinfoAccessToken,
     MyinfoApiKey,
+    MyinfoPersonOutput,
 )
 
 logger = structlog.getLogger()
@@ -31,15 +32,25 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
         self._req_builder = MyinfoRequestBuilder()
         self._res_parser = MyinfoResponseParser(self._requested_attributes)
 
-    # def get_data(
-    #         self,
-    #         code: domain.AuthCode,
-    # ) -> domain.MyinfoPerson:
-    #
-    #     access_token = self._get_access_token(code)
-    #     person_output = self._get_person_data(access_token)
-    #
-    #     return self._map_data(person_output)
+    def get_data(
+            self,
+            code: domain.AuthCode,
+    ) -> domain.MyinfoPerson:
+
+        access_token = self._get_access_token(code)
+        person_output = self._get_person_data(access_token)
+
+        return self._map_data(person_output)
+
+    def _map_data(
+            self,
+            person_output: MyinfoPersonOutput,
+    ) -> domain.MyinfoPerson:
+
+        self._validate_person_data(person_output)
+        person = self._mapper.to_myinfo_person(person_output)
+
+        return person
 
     def _get_access_token(self, code: domain.AuthCode) -> MyinfoAccessToken:
 
@@ -79,10 +90,51 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
             return token
 
         except HTTPError as e:
-            logger.error(MYINFO_SERVICE_LOG_EVENT,
+            logger.error(f'{MYINFO_SERVICE_LOG_EVENT} token',
                          message=f'status: {e.response.status_code}, msg={e.response.content}')
 
             raise error.AccessTokenBadRequest(e)
+
+    def _get_person_data(self, token: MyinfoAccessToken) -> MyinfoPersonOutput:
+
+        url = self._endpoint + '/person' + '/' + token.sub + '/'
+
+        auth = self._req_builder.build_person_auth_header(
+            endpoint=url,
+            api_key=self._get_api_key(),
+            attributes=self._requested_attributes,
+            private_key=self._kasa_private_key,
+        )
+
+        final_auth = f'{auth},Bearer {token.access_token}'
+
+        params = {
+            'client_id': self._client_id,
+            'attributes': self._requested_attributes,
+        }
+
+        try:
+            response = self.get(
+                url=url,
+                query_params=params,
+                authorization=final_auth,
+            )
+
+            payload = response.content.decode('utf-8')
+
+            person = self._res_parser.build_person_res(
+                payload=payload,
+                kasa_private_key=self._kasa_private_key,
+                myinfo_public_key=self._myinfo_public_key,
+            )
+
+            return person
+
+        except HTTPError as e:
+            logger.error(f'{MYINFO_SERVICE_LOG_EVENT} person',
+                         message=f'status: {e.response.status_code}, msg={e.response.content}')
+
+            raise error.PersonBadRequest(e)
 
     def get_authorise_url(self) -> domain.MyinfoAuthoriseRedirectUrl:
 
@@ -139,3 +191,29 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
             client_id=self._client_id,
             client_secret=self._client_secret,
         )
+
+    def _validate_person_data(
+            self,
+            data: MyinfoPersonOutput,
+    ) -> None:
+
+        while True:
+            if not data.name:
+                break
+            if not data.dob:
+                break
+            if not data.birthcountry:
+                break
+            if not data.nationality:
+                break
+            if not data.uinfin:
+                break
+            if not data.sex:
+                break
+            if not data.regadd:
+                break
+            if not data.noa_basic:
+                break
+            return
+
+        raise error.PersonDataInvalid

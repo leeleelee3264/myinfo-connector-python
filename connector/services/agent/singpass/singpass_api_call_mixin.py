@@ -46,8 +46,9 @@ class SingpassApiMixIn:
     ) -> Response:
 
         header = {
+            'Content-Type': content_type,
             'Cache-Control': 'no-cache',
-            # 'Authorization': authorization + ',Bearer ' + token.access_token,
+            'Authorization': authorization,
         }
 
         try:

@@ -69,6 +69,37 @@ class MyinfoRequestBuilder:
             signature=signature,
         )
 
+    def build_person_auth_header(
+            self,
+            endpoint: str,
+            api_key: MyinfoApiKey,
+            attributes: str,
+            private_key: str,
+    ) -> domain.Authorization:
+        nonce = uuid.uuid4()
+        timestamp = self._get_current_milli_time()
+
+        auth_header_param = f'&app_id={api_key.app_id}' \
+                            f'&attributes={attributes}' \
+                            f'&client_id={api_key.client_id}' \
+                            f'&nonce={nonce}' \
+                            f'&signature_method=RS256' \
+                            f'&timestamp={timestamp}'
+
+        raw_auth_header = f'GET&{endpoint}{auth_header_param}'
+
+        signature = self._sign_on_raw_header(
+            base_string=raw_auth_header,
+            private_key=private_key,
+        )
+
+        return self._add_signature_in_header(
+            nonce=nonce,
+            timestamp=timestamp,
+            app_id=api_key.app_id,
+            signature=signature,
+        )
+
     def _add_signature_in_header(
             self,
             nonce: uuid.UUID,
