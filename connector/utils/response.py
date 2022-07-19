@@ -1,4 +1,7 @@
-from enum import unique, Enum
+from enum import (
+    Enum,
+    unique,
+)
 
 from rest_framework.response import Response
 
@@ -45,3 +48,29 @@ class APIResponse(Response):
         }
 
         super().__init__(_remove_none_values(payload), status=status, headers=headers)
+
+
+class ErrorData(dict):
+    def __init__(self, title: str, description: str, code='UNDEFINED_CODE', data=None):
+        code = code.value if isinstance(code, APIResponse.Code) else code
+        super().__init__(title=title, description=description, code=code, data=data)
+
+    @property
+    def title(self):
+        return self['title']
+
+    @property
+    def description(self):
+        return self['description']
+
+    @description.setter
+    def description(self, v):
+        self['description'] = v
+
+    @property
+    def code(self):  # TODO: Deprecated code in ErrorData
+        return self['code']
+
+    @property
+    def data(self):
+        return self['data']

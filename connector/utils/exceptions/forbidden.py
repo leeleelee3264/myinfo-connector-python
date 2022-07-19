@@ -1,7 +1,7 @@
 from rest_framework import status
 
-from services.common.constants import KASA_CUSTOMER_HOPE_TEL_NUMBER
 from utils.exceptions import KasaAPIException
+from utils.exceptions.const import LEELEE_CUSTOMER_CONTRACT
 
 
 class ForbiddenError(KasaAPIException):
@@ -14,7 +14,7 @@ class LeftUserError(ForbiddenError):
     message = 'Left.'
     code = 'LEFT_USER'
     description = ('해당 계정은 탈퇴된 계정입니다.'
-                   f'다시 서비스를 이용하시려면 고객센터({KASA_CUSTOMER_HOPE_TEL_NUMBER})로 문의해주세요.')
+                   f'다시 서비스를 이용하시려면 고객센터({LEELEE_CUSTOMER_CONTRACT})로 문의해주세요.')
 
 
 class BlockedError(ForbiddenError):
@@ -22,7 +22,7 @@ class BlockedError(ForbiddenError):
     code = 'BLOCKED'
     title = '로그인이 차단되었습니다.'
     description = ('해당 계정을 통한 악의적 시도가 의심되어 로그인이 차단되었습니다. '
-                   f'다시 서비스를 이용하시려면 고객센터({KASA_CUSTOMER_HOPE_TEL_NUMBER})로 문의해주세요.')
+                   f'다시 서비스를 이용하시려면 고객센터({LEELEE_CUSTOMER_CONTRACT})로 문의해주세요.')
 
 
 class InvalidAccessError(ForbiddenError):

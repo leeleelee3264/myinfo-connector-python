@@ -4,8 +4,10 @@ from django.conf import settings
 from rest_framework import status
 
 # from ratelimit.utils import _split_rate
-from services.common.constants import KASA_CUSTOMER_HOPE_TEL_NUMBER
-from utils.exceptions import KasaAPIException
+from utils.exceptions import (
+    LEELEE_CUSTOMER_CONTRACT,
+    KasaAPIException,
+)
 from utils.response import APIResponse
 
 
@@ -144,7 +146,7 @@ class TransferBlockedError(UnprocessableEntityError):
     message = "User's transfer is blocked."
     code = APIResponse.Code.TRANSFER_BLOCKED.value
     title = '입출금이 제한되었습니다.'
-    description = f'다시 입출금 서비스를 이용하시려면 CS팀({KASA_CUSTOMER_HOPE_TEL_NUMBER})으로 문의해주세요.'
+    description = f'다시 입출금 서비스를 이용하시려면 CS팀({LEELEE_CUSTOMER_CONTRACT})으로 문의해주세요.'
 
 
 class OrderBlockedError(UnprocessableEntityError):
