@@ -1,0 +1,12 @@
+AUTHORISE_STATE = 'state'
+AUTHORISE_URL = 'url'
+AUTHORISE_CODE = 'code'
+
+NAME = 'name'
+DOB = 'dob'
+BIRTHCOUNTRY = 'birthcountry'
+NATIONALITY = 'nationality'
+UINFIN = 'uinfin'
+SEX = 'sex'
+REGADD = 'regadd'
+NOA_BASIC = 'noa_basic'

@@ -1,2 +1,0 @@
-AUTHORISE_STATE = 'state'
-AUTHORISE_URL = 'url'

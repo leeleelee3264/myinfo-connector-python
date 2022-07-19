@@ -26,7 +26,6 @@ class MyinfoPersonData:
     sex: str
     regadd: dict
     noa_basic: int
-    noa_basic_year: str
 
 
 DecryptedPersonData = str
