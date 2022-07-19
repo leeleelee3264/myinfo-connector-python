@@ -28,13 +28,6 @@ class InsufficientFundsError(UnprocessableEntityError):
     description = '예치금이 부족합니다. 예치금을 확인하고 다시 시도해주세요.'
 
 
-class InsufficientDABSError(UnprocessableEntityError):
-    message = 'Insufficient DABS'
-    code = APIResponse.Code.INSUFFICIENT_DABS.value
-    title = 'DABS가 부족합니다'
-    description = 'DABS가 부족합니다. DABS를 확인하고 다시 시도해주세요.'
-
-
 class SubscriptionLimitExceededError(UnprocessableEntityError):
     message = "Cannot subscribe more than 5% of public offering"
     code = APIResponse.Code.SUBSCRIPTION_LIMIT_EXCEEDED.value

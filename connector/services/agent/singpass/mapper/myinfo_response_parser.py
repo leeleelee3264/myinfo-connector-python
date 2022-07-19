@@ -95,8 +95,7 @@ class MyinfoResponseParser:
             uinfin=decoded_payload.get(self._uinfin).get('value'),
             sex=decoded_payload.get(self._sex).get('code'),
             regadd=decoded_payload.get(self._registered_address),
-            noa_basic=decoded_payload.get(self._notice_of_assessment).get('amount').get('value'),
-            noa_basic_year=decoded_payload.get(self._notice_of_assessment).get('yearofassessment').get('value'),
+            noa_basic=decoded_payload.get(self._notice_of_assessment),
         )
 
     def _verify_person_data(
