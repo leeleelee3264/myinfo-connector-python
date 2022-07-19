@@ -8,7 +8,16 @@ from jwcrypto import (
 )
 from jwcrypto.common import JWException
 
-from domain.oauth import dto as domain
+from domain.oauth.dto.common import (
+    PrivateKey,
+    PublicKey,
+)
+from domain.oauth.dto.sign_up import (
+    DecodedPersonData,
+    DecryptedPersonData,
+    MyinfoAccessTokenData,
+    MyinfoPersonData,
+)
 from services.agent.singpass import error
 from services.agent.singpass.apps import REQUEST_ATTRIBUTES
 
@@ -31,7 +40,7 @@ class MyinfoResponseParser:
             self,
             payload,
             myinfo_public_key: str,
-    ) -> domain.MyinfoAccessTokenData:
+    ) -> MyinfoAccessTokenData:
 
         key = self._get_key(myinfo_public_key)
 
@@ -43,7 +52,7 @@ class MyinfoResponseParser:
         except (AttributeError, ValueError) as e:
             raise error.AccessTokenInternalServerError(str(e))
 
-        return domain.MyinfoAccessTokenData(
+        return MyinfoAccessTokenData(
             sub=str(data.get('sub')),
             access_token=payload.get('access_token'),
             token_type=payload.get('token_type'),
@@ -56,7 +65,7 @@ class MyinfoResponseParser:
             kasa_private_key: str,
             myinfo_public_key: str,
 
-    ) -> domain.MyinfoPersonData:
+    ) -> MyinfoPersonData:
 
         try:
             data = self._verify_person_data(
@@ -75,10 +84,10 @@ class MyinfoResponseParser:
 
     def _convert_person_data(
             self,
-            decoded_payload: domain.DecodedPersonData,
-    ) -> domain.MyinfoPersonData:
+            decoded_payload: DecodedPersonData,
+    ) -> MyinfoPersonData:
 
-        return domain.MyinfoPersonData(
+        return MyinfoPersonData(
             name=decoded_payload.get(self._name).get('value'),
             dob=decoded_payload.get(self._date_of_birth).get('value'),
             birthcountry=decoded_payload.get(self._birth_country).get('code'),
@@ -95,7 +104,7 @@ class MyinfoResponseParser:
             payload,
             kasa_private_key: str,
             myinfo_public_key: str,
-    ) -> domain.DecodedPersonData:
+    ) -> DecodedPersonData:
 
         decrypt_key = self._get_key(kasa_private_key)
         decode_key = self._get_key(myinfo_public_key)
@@ -105,7 +114,7 @@ class MyinfoResponseParser:
 
         return decoded_payload
 
-    def _get_key(self, key: str) -> Union[domain.PrivateKey, domain.PublicKey]:
+    def _get_key(self, key: str) -> Union[PrivateKey, PublicKey]:
         encode_key = key.encode('utf-8')
         key_dict = jwk.JWK.from_pem(encode_key)
 
@@ -113,9 +122,9 @@ class MyinfoResponseParser:
 
     def _decode(
             self,
-            encoded_payload: domain.DecryptedPersonData,
-            key: domain.PublicKey,
-    ) -> domain.DecodedPersonData:
+            encoded_payload: DecryptedPersonData,
+            key: PublicKey,
+    ) -> DecodedPersonData:
 
         token = jwt.JWT()
         token.deserialize(jwt=encoded_payload, key=key)
@@ -128,8 +137,8 @@ class MyinfoResponseParser:
     def _decrypt(
             self,
             encrypted_payload: str,
-            key: domain.PrivateKey,
-    ) -> domain.DecryptedPersonData:
+            key: PrivateKey,
+    ) -> DecryptedPersonData:
 
         params = self._get_decrypt_params(encrypted_payload)
 

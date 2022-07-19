@@ -3,7 +3,12 @@ import json
 import structlog
 from requests.exceptions import HTTPError
 
-from domain import oauth as domain
+from domain.oauth.dto.common import ApiKey
+from domain.oauth.dto.sign_up import (
+    MyinfoAccessTokenData,
+    MyinfoAuthoriseRedirectUrlData,
+    MyinfoPersonData,
+)
 from domain.oauth.services.sign_up import OauthSignupService
 from services.agent.singpass import error
 from services.agent.singpass.apps import (
@@ -35,13 +40,13 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
     def get_data(
             self,
             code: str,
-    ) -> domain.MyinfoPersonData:
+    ) -> MyinfoPersonData:
 
         access_token = self._get_access_token(code)
 
         return self._get_person_data(access_token)
 
-    def _get_access_token(self, code: str) -> domain.MyinfoAccessTokenData:
+    def _get_access_token(self, code: str) -> MyinfoAccessTokenData:
 
         url = ENDPOINT + '/token'
 
@@ -84,7 +89,7 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
 
             raise error.AccessTokenBadRequest(e)
 
-    def _get_person_data(self, token: domain.MyinfoAccessTokenData) -> domain.MyinfoPersonData:
+    def _get_person_data(self, token: MyinfoAccessTokenData) -> MyinfoPersonData:
 
         url = ENDPOINT + '/person' + '/' + token.sub + '/'
 
@@ -125,7 +130,7 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
 
             raise error.PersonBadRequest(e)
 
-    def get_authorise_url(self) -> domain.MyinfoAuthoriseRedirectUrlData:
+    def get_authorise_url(self) -> MyinfoAuthoriseRedirectUrlData:
 
         url = ENDPOINT + '/authorise'
 
@@ -136,8 +141,9 @@ class MyinfoSignupService(OauthSignupService, SingpassApiMixIn):
             redirect_uri=REDIRECT_URL,
         )
 
-    def _get_api_key(self) -> domain.ApiKey:
-        return domain.ApiKey(
+    def _get_api_key(self) -> ApiKey:
+
+        return ApiKey(
             app_id=APP_ID,
             client_id=CLIENT_ID,
             client_secret=CLIENT_SECRET,

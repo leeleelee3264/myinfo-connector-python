@@ -13,7 +13,5 @@ class ApiKey:
 PrivateKey = jwk.JWK
 PublicKey = jwk.JWK
 
-DecryptedPersonData = str
-DecodedPersonData = dict
 Authorization = str
 Signature = str

@@ -1,16 +1,16 @@
 from django.apps import AppConfig
 from django.conf import settings
 
-CLIENT_ID = None
-APP_ID = None
-CLIENT_SECRET = None
+CLIENT_ID = ''
+APP_ID = ''
+CLIENT_SECRET = ''
 
-KASA_PRIVATE_KEY = None
-MYINFO_PUBLIC_KEY = None
+KASA_PRIVATE_KEY = ''
+MYINFO_PUBLIC_KEY = ''
 
-ENDPOINT = None
-REDIRECT_URL = None
-REQUEST_ATTRIBUTES = None
+ENDPOINT = ''
+REDIRECT_URL = ''
+REQUEST_ATTRIBUTES = ''
 
 
 class SingpassAppConfig(AppConfig):

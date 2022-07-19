@@ -25,14 +25,6 @@ class PersonDataInvalid(MyinfoError):
     description = 'Person Data is invalid. Parameters are missing to registry to Kasa.'
 
 
-class CredentialNotFoundError(MyinfoError):
-    description = 'There is no credential for myinfo.'
-
-
-class CertificationNotFoundError(MyinfoError):
-    description = 'There is no certification key for myinfo.'
-
-
 class SettingNotFound(MyinfoError):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     code = "MYINFO_SETTING_NOT_FOUND"

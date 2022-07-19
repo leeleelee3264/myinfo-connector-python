@@ -6,8 +6,12 @@ from Crypto.Hash import SHA256
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 
-from domain import oauth as domain
-from services.agent.singpass.value_object import MyinfoApiKey
+from domain.oauth.dto.common import (
+    ApiKey,
+    Authorization,
+    Signature,
+)
+from domain.oauth.dto.sign_up import MyinfoAuthoriseRedirectUrlData
 
 
 class MyinfoRequestBuilder:
@@ -15,10 +19,10 @@ class MyinfoRequestBuilder:
     def build_authorise_url(
             self,
             endpoint: str,
-            api_key: MyinfoApiKey,
+            api_key: ApiKey,
             attributes: str,
             redirect_uri: str,
-    ) -> domain.MyinfoAuthoriseRedirectUrl:
+    ) -> MyinfoAuthoriseRedirectUrlData:
 
         state = uuid.uuid4()
 
@@ -29,7 +33,7 @@ class MyinfoRequestBuilder:
               f'&redirect_uri={redirect_uri}' \
               f'&purpose=python-myinfo-connector'
 
-        return domain.MyinfoAuthoriseRedirectUrl(
+        return MyinfoAuthoriseRedirectUrlData(
             state=state,
             url=url,
         )
@@ -37,11 +41,11 @@ class MyinfoRequestBuilder:
     def build_token_auth_header(
             self,
             endpoint: str,
-            api_key: MyinfoApiKey,
-            code: domain.AuthCode,
+            api_key: ApiKey,
+            code: str,
             redirect_uri: str,
             private_key: str,
-    ) -> domain.Authorization:
+    ) -> Authorization:
         nonce = uuid.uuid4()
         timestamp = self._get_current_milli_time()
 
@@ -72,10 +76,10 @@ class MyinfoRequestBuilder:
     def build_person_auth_header(
             self,
             endpoint: str,
-            api_key: MyinfoApiKey,
+            api_key: ApiKey,
             attributes: str,
             private_key: str,
-    ) -> domain.Authorization:
+    ) -> Authorization:
         nonce = uuid.uuid4()
         timestamp = self._get_current_milli_time()
 
@@ -105,8 +109,8 @@ class MyinfoRequestBuilder:
             nonce: uuid.UUID,
             timestamp: str,
             app_id: str,
-            signature: domain.Signature,
-    ) -> domain.Authorization:
+            signature: Signature,
+    ) -> Authorization:
 
         return f"PKI_SIGN timestamp=\"{timestamp}" \
                f"\",nonce=\"{nonce}" \
@@ -119,7 +123,7 @@ class MyinfoRequestBuilder:
             self,
             base_string: str,
             private_key: str,
-    ) -> domain.Signature:
+    ) -> Signature:
 
         digest = SHA256.new()
         digest.update(

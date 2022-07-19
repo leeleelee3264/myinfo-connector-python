@@ -2,7 +2,7 @@ import requests
 import structlog
 from rest_framework.response import Response
 
-from domain import oauth as domain
+from domain.oauth.dto.common import Authorization
 
 logger = structlog.getLogger()
 SINGPASS_SERVICE_LOG_EVENT = "singpass_api_service"
@@ -14,7 +14,7 @@ class SingpassApiMixIn:
             self,
             url: str,
             body,
-            authorization: domain.Authorization,
+            authorization: Authorization,
             content_type: str = 'application/json',
     ) -> Response:
 
@@ -41,7 +41,7 @@ class SingpassApiMixIn:
             self,
             url: str,
             query_params,
-            authorization: domain.Authorization,
+            authorization: Authorization,
             content_type: str = 'application/json',
     ) -> Response:
 
