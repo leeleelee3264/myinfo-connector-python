@@ -1,6 +1,8 @@
 from django.apps import AppConfig
 from django.conf import settings
 
+from services.agent.singpass.error import SettingNotFound
+
 CLIENT_ID = ''
 APP_ID = ''
 CLIENT_SECRET = ''
@@ -41,3 +43,10 @@ class SingpassAppConfig(AppConfig):
 
         global REQUEST_ATTRIBUTES
         REQUEST_ATTRIBUTES = settings.MYINFO_REQUESTED_ATTRIBUTES
+
+        self._validate_setting()
+
+    def _validate_setting(self):
+
+        if '' in set(globals()):
+            raise SettingNotFound()

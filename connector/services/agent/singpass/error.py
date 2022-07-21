@@ -1,6 +1,3 @@
-from rest_framework import status
-
-
 class MyinfoError(Exception):
     description = ''
 
@@ -26,6 +23,4 @@ class PersonDataInvalid(MyinfoError):
 
 
 class SettingNotFound(MyinfoError):
-    status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    code = "MYINFO_SETTING_NOT_FOUND"
     description = 'Myinfo setting is not defined, please check server setting.'
