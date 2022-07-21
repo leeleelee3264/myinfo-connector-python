@@ -1,9 +1,9 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 
 
-class ConflictError(KasaAPIException):
+class ConflictError(CustomAPIException):
     status_code = status.HTTP_409_CONFLICT
     message = 'Conflict.'
     code = 'CONFLICT'

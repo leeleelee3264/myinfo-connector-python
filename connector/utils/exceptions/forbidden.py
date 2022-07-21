@@ -1,10 +1,10 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 from utils.exceptions.const import LEELEE_CUSTOMER_CONTRACT
 
 
-class ForbiddenError(KasaAPIException):
+class ForbiddenError(CustomAPIException):
     status_code = status.HTTP_403_FORBIDDEN
     message = 'Forbidden.'
     code = 'FORBIDDEN'

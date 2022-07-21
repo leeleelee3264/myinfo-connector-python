@@ -3,10 +3,10 @@ from typing import Type
 from django.db import models
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 
 
-class InternalServerError(KasaAPIException):
+class InternalServerError(CustomAPIException):
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     message = 'Internal server error.'
     code = 'INTERNAL_SERVER_ERROR'

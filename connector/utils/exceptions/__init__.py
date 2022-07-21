@@ -20,7 +20,7 @@ class ValidationError(Exception):
         self.data = data
 
 
-class KasaAPIException(Exception):
+class CustomAPIException(Exception):
     status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR
 
     code: Union[APIResponse.Code, str] = APIResponse.Code.INTERNAL_SERVER_ERROR

@@ -6,12 +6,12 @@ from rest_framework import status
 # from ratelimit.utils import _split_rate
 from utils.exceptions import (
     LEELEE_CUSTOMER_CONTRACT,
-    KasaAPIException,
+    CustomAPIException,
 )
 from utils.response import APIResponse
 
 
-class UnprocessableEntityError(KasaAPIException):
+class UnprocessableEntityError(CustomAPIException):
     status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
     message = 'Unprocessable Entity.'
     code = 'UNPROCESSABLE_ENTITY'

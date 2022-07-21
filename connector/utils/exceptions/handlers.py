@@ -9,8 +9,6 @@ from rest_framework.views import (
     set_rollback,
 )
 
-from elasticapm.contrib.django.client import client
-from sentry_sdk import capture_exception
 from utils import exceptions as kasa_exceptions
 from utils.response import (
     APIErrorResponse,
@@ -34,17 +32,11 @@ def custom_exception_handler(exc, context) -> Optional[APIErrorResponse]:
         )
 
     set_rollback()
-    response = _kasa_exception_handler(exc, context)
+    response = _custom_exception_handler(exc, context)
 
     if settings.TESTING or settings.APP_ENVIRONMENT.is_local:
         if not response:
             return None  # Let an Exception raise
-
-    if _is_error(response):
-        if settings.SENTRY_ENABLED:
-            capture_exception(exc)
-        if settings.ELASTIC_APM_ENABLED:
-            client.capture_exception()
 
     if response:
         return response
@@ -71,8 +63,8 @@ def _convert_to_manageable(exc):
     return exc
 
 
-def _kasa_exception_handler(exc, _context) -> Optional[APIErrorResponse]:
-    if not isinstance(exc, kasa_exceptions.KasaAPIException):
+def _custom_exception_handler(exc, _context) -> Optional[APIErrorResponse]:
+    if not isinstance(exc, kasa_exceptions.CustomAPIException):
         return None
     return APIErrorResponse(
         status=exc.status_code,

@@ -1,9 +1,9 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 
 
-class UpgradeRequiredError(KasaAPIException):
+class UpgradeRequiredError(CustomAPIException):
     status_code = status.HTTP_426_UPGRADE_REQUIRED
     message = 'Required upgrade.'
     code = 'UPGRADE_REQUIRED'

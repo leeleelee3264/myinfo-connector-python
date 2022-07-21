@@ -3,10 +3,10 @@ from typing import Type
 from django.db import models
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 
 
-class NotFoundError(KasaAPIException):
+class NotFoundError(CustomAPIException):
     status_code = status.HTTP_404_NOT_FOUND
     message = 'Not found.'
     code = 'NOT_FOUND'

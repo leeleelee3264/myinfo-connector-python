@@ -1,9 +1,9 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 
 
-class UnauthorizedError(KasaAPIException):
+class UnauthorizedError(CustomAPIException):
     status_code = status.HTTP_401_UNAUTHORIZED
     message = 'Unauthorized.'
     code = 'UNAUTHORIZED'

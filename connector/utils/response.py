@@ -2,8 +2,10 @@ from enum import (
     Enum,
     unique,
 )
+from typing import Union
 
 from rest_framework.response import Response
+from rest_framework.status import HTTP_500_INTERNAL_SERVER_ERROR
 
 
 def _remove_none_values(data):
@@ -74,3 +76,22 @@ class ErrorData(dict):
     @property
     def data(self):
         return self['data']
+
+
+class APIErrorResponse(Response):
+
+    def __init__(
+        self,
+        status: int = HTTP_500_INTERNAL_SERVER_ERROR,
+        error: Union[ErrorData, dict] = None,
+        *,
+        message: str = None,
+        headers=None,
+    ):
+        payload = {
+            'message': message,
+            'code': getattr(error, 'code', None),
+            'error': error,
+        }
+
+        super().__init__(_remove_none_values(payload), status=status, headers=headers)

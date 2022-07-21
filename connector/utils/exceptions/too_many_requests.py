@@ -1,11 +1,11 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 from utils.exceptions.unprocessable_entity import UnprocessableEntityError
 from utils.response import APIResponse
 
 
-class TooManyRequestsError(KasaAPIException):
+class TooManyRequestsError(CustomAPIException):
     status_code = status.HTTP_429_TOO_MANY_REQUESTS
     message = 'Too many requests.'
     code = 'TOO_MANY_REQUESTS'

@@ -1,10 +1,10 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 from utils.response import APIResponse
 
 
-class ServiceUnavailableError(KasaAPIException):
+class ServiceUnavailableError(CustomAPIException):
     status_code = status.HTTP_503_SERVICE_UNAVAILABLE
     message = 'Service unavailable.'
     code = 'SERVICE_UNAVAILABLE'

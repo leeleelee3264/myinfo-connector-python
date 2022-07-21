@@ -1,10 +1,10 @@
 from rest_framework import status
 
-from utils.exceptions import KasaAPIException
+from utils.exceptions import CustomAPIException
 from utils.response import APIResponse
 
 
-class BadRequestError(KasaAPIException):
+class BadRequestError(CustomAPIException):
     status_code = status.HTTP_400_BAD_REQUEST
     message = 'Bad request.'
     code = 'BAD_REQUEST'
