@@ -1,10 +1,5 @@
-class MyinfoServiceError(Exception):
-
-    def __init__(self, description=''):
-        self.description = description
-
-    message = 'Myinfo Registration is not available. Please use another registration.'
+from utils.exceptions import InternalServerError
 
 
-class InvalidMyinfoSignature(MyinfoServiceError):
+class MyinfoServiceError(InternalServerError):
     pass

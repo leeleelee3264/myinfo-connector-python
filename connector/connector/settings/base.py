@@ -9,13 +9,44 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+from enum import unique, Enum
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from .env import (
     ENV,
 )
+
+
+@unique
+class Environment(Enum):
+    PROD = 'prod'
+    PERF = 'perf'
+    STAGING = 'staging'
+    DEV = 'development'
+    LOCAL = 'local'
+    BUILD = 'build'
+
+    @property
+    def is_prod(self):
+        return self == Environment.PROD
+
+    @property
+    def is_staging(self):
+        return self == Environment.STAGING
+
+    @property
+    def is_dev(self):
+        return self == Environment.DEV
+
+    @property
+    def is_local(self):
+        return self == Environment.LOCAL
+
+
+APP_ENV = ENV.str('APP_ENV', default='local')
+APP_ENVIRONMENT: Environment = Environment(APP_ENV)
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,6 +86,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'utils.middlewares.CustomExceptionHandlerMiddleware',
+
 ]
 
 ROOT_URLCONF = 'connector.urls'
