@@ -25,5 +25,4 @@ class ExternalMyinfoResponseBuilder:
             const.BIRTHCOUNTRY: myinfo_person.birthcountry,
             const.NATIONALITY: myinfo_person.nationality,
             const.UINFIN: myinfo_person.uinfin,
-            const.NOA_BASIC: myinfo_person.noa_basic,
         }

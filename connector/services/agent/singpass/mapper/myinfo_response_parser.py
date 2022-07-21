@@ -35,7 +35,6 @@ class MyinfoResponseParser:
         self._uinfin = self._attributes[4]
         self._sex = self._attributes[5]
         self._registered_address = self._attributes[6]
-        self._notice_of_assessment = self._attributes[7]
 
     def build_token_res(
             self,
@@ -88,7 +87,7 @@ class MyinfoResponseParser:
             decoded_payload: DecodedPersonData,
     ) -> MyinfoPersonData:
 
-        person = JsonPersonData(**decoded_payload)
+        person = JsonPersonData(**decoded_payload)._asdict()
 
         return MyinfoPersonData(
             name=person[self._name].get('value'),
@@ -98,7 +97,6 @@ class MyinfoResponseParser:
             sex=person[self._sex].get('code'),
             uinfin=person[self._uinfin].get('value'),
             regadd=person[self._registered_address],
-            # noa_basic=decoded_payload.get(self._notice_of_assessment),
         )
 
     def _verify_person_data(
