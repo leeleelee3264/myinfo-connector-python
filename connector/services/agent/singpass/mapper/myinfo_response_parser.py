@@ -15,6 +15,7 @@ from domain.oauth.dto.common import (
 from domain.oauth.dto.sign_up import (
     DecodedPersonData,
     DecryptedPersonData,
+    JsonPersonData,
     MyinfoAccessTokenData,
     MyinfoPersonData,
 )
@@ -87,15 +88,17 @@ class MyinfoResponseParser:
             decoded_payload: DecodedPersonData,
     ) -> MyinfoPersonData:
 
+        person = JsonPersonData(**decoded_payload)
+
         return MyinfoPersonData(
-            name=decoded_payload.get(self._name).get('value'),
-            dob=decoded_payload.get(self._date_of_birth).get('value'),
-            birthcountry=decoded_payload.get(self._birth_country).get('code'),
-            nationality=decoded_payload.get(self._nationality).get('code'),
-            uinfin=decoded_payload.get(self._uinfin).get('value'),
-            sex=decoded_payload.get(self._sex).get('code'),
-            regadd=decoded_payload.get(self._registered_address),
-            noa_basic=decoded_payload.get(self._notice_of_assessment),
+            name=person[self._name].get('value'),
+            dob=person[self._date_of_birth].get('value'),
+            birthcountry=person[self._birth_country].get('code'),
+            nationality=person[self._nationality].get('code'),
+            sex=person[self._sex].get('code'),
+            uinfin=person[self._uinfin].get('value'),
+            regadd=person[self._registered_address],
+            # noa_basic=decoded_payload.get(self._notice_of_assessment),
         )
 
     def _verify_person_data(
@@ -131,7 +134,8 @@ class MyinfoResponseParser:
         data = token.claims
         data_dict = json.loads(data)
 
-        return data_dict
+        person = DecodedPersonData(**data_dict)
+        return person
 
     def _decrypt(
             self,

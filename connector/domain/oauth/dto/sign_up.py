@@ -1,3 +1,4 @@
+from collections import namedtuple
 from dataclasses import dataclass
 from uuid import UUID
 
@@ -25,8 +26,11 @@ class MyinfoPersonData:
     uinfin: str
     sex: str
     regadd: dict
-    noa_basic: int
 
 
 DecryptedPersonData = str
 DecodedPersonData = dict
+# DecodedPersonData = namedtuple('DecodedPersonData', 'name,dob,birthcountry,nationality,uinfin,sex,regadd')
+
+JsonPersonData = namedtuple('JsonPersonData',
+                            ('name', 'dob', 'birthcountry', 'nationality', 'uinfin', 'sex', 'regadd'))
