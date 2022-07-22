@@ -1,2 +1,3 @@
 from .external_myinfo_redirect_login import ExternalMyinfoRedirectLoginView
 from .external_myinfo import ExternalMyinfoView
+from .internal_myinfo_redirect import MyinfoCallbackView
